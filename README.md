@@ -21,5 +21,9 @@ https://www.etcconnect.com/WorkArea/DownloadAsset.aspx?id=10737502836
 ###USB EXTENSION CORD###
 https://www.amazon.com/BlueRigger-Female-Active-Extension-Repeater/dp/B005LJKEXS/ref=pd_ci_mcx_mh_mcx_views_0?pd_rd_w=Ogg0E&content-id=amzn1.sym.1bcf206d-941a-4dd9-9560-bdaa3c824953&pf_rd_p=1bcf206d-941a-4dd9-9560-bdaa3c824953&pf_rd_r=8GF75C332TJ2PJ7N38QV&pd_rd_wg=L5jM8&pd_rd_r=29f0fd36-06d3-4c96-8533-c857726b2507&pd_rd_i=B005LJKEXS
 
-###POTENTIOMETER CIRCUIT###
+###MCP3008 CHIP###
 https://www.amazon.com/gp/product/B00NAY3RB2/ref=ox_sc_act_title_1?smid=AM0JQO74J587C&psc=1
+
+###POTENTIOMETER CIRCUIT###
+https://projects.raspberrypi.org/en/projects/physical-computing/13
+
