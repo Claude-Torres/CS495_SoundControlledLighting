@@ -3,6 +3,7 @@ import math
 import struct
 import RPi.GPIO as GPIO
 import threading
+import numpy
 
 def open_stream(chunk=1024, sample_rate=44100, num_channels=128, device_index=2):
     p = pyaudio.PyAudio()
@@ -81,8 +82,9 @@ class Potenti(threading.Thread):
             # light LED's
             if GPIO.input(potentiometer) == 1:
                 manDecThresh = 80
-            else:
-                manDecThresh = 0
+            elif GPIO.input(potentiometer) == 0:
+                # Enable Machine Learning Here!
+                
             
     def stop(self):
         self.stopped = True
@@ -110,16 +112,27 @@ potenti.start()
 ledthread = LEDThread()
 ledthread.start()
 
+decVals = []
 
 while True:
     
     decibel1 = get_decibel(p1, stream1, chunk=1024)
     decibel2 = get_decibel(p2, stream2, chunk=1024)
-    decibel3 = 2
-    decibel4 = 1
+    decibel3 = 45
+    decibel4 = 40
+    
+    if len(decVals) < 4000:
+        decVals.append(decibel1)
+        decVals.append(decibel2)
+        decVals.append(decibel3)
+        decVals.append(decibel4)
+    elif manDecThresh == 0:
+        decVals = np.array(decVals)
+        manDecThresh = decVals.median()
+    
     print(f"Microphone 1: {decibel1}, Microphone 2: {decibel2}, Microphone 3: {decibel3}, Microphone 4: {decibel4}")
 
-close_stream(p1, stream1)
+close_stream(p1, stream1}
 close_stream(p2, stream2)
 #close_stream(p3, stream3)
 #close_stream(p4, stream4)
