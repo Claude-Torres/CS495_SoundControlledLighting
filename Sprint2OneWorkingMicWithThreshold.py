@@ -3,7 +3,7 @@ import math
 import struct
 import RPi.GPIO as GPIO
 import threading
-import numpy
+import numpy as np
 
 def open_stream(chunk=1024, sample_rate=44100, num_channels=128, device_index=2):
     p = pyaudio.PyAudio()
