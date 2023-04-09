@@ -27,3 +27,4 @@ https://www.amazon.com/gp/product/B00NAY3RB2/ref=ox_sc_act_title_1?smid=AM0JQO74
 ###POTENTIOMETER CIRCUIT###
 https://projects.raspberrypi.org/en/projects/physical-computing/13
 
+![image](https://user-images.githubusercontent.com/98055163/230794572-424bd716-af15-47fd-bc0f-0bb61ab137f0.png)
