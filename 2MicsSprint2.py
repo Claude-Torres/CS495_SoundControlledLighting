@@ -5,6 +5,9 @@ import RPi.GPIO as GPIO # used to integrate breadboard LED for testing
 import threading # seperates constant tasks onto seperate threads
 from gpiozero import MCP3008 # used to convert potentiometer from analog to serial input
 import numpy as np # used for ML
+import subprocess
+import os
+import time
 
 # Initialize PyAudio object and microhone input stream
 def open_stream(chunk=1024, sample_rate=44100, num_channels=128, device_index=2):
@@ -91,12 +94,32 @@ class LEDThread(threading.Thread):
     
     def run(self):
         global manDecThresh
+
+        sentCmd = False
         
         while True:
             # light LED's
             if  decibel1 > manDecThresh:
+                if not sentCmd:
+                    print("\n\n\n\n\nSent!\n\n\n\n\n")
+                    #subprocess.Popen(['lxterminal'])
+
+                    # execute the script in the new terminal process
+                    #subprocess.Popen(['lxterminal', '--command=./3on.sh'])
+                    command = "./3on.sh"
+
+                    os.system("lxterminal -e 'bash -c \"" + command + "; exit\"'")
+                    
+                    #time.sleep(2)
+
+                    # Close the terminal window
+                    #subprocess.Popen(['pkill', 'lxterminal'])
+                    sentCmd = True
+                
                 GPIO.output(light, GPIO.HIGH)
             elif manDecThresh >= decibel1:
+                if sentCmd:
+                    sentCmd = False
                 GPIO.output(light, GPIO.LOW)
         GPIO.output(light, GPIO.LOW)
             
