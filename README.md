@@ -1,5 +1,7 @@
 "# CS495_SoundControlledLighting" 
 
+Helpful links:
+
 ###EXPENSIVE MICROPHONE###
 https://www.amazon.com/Microphone-Gooseneck-Universal-Compatible-CGS-M1/dp/B08M37224H/ref=sr_1_11?keywords=usb+microphone+raspberry+pi&qid=1674491726&sr=8-11
 
@@ -27,4 +29,53 @@ https://www.amazon.com/gp/product/B00NAY3RB2/ref=ox_sc_act_title_1?smid=AM0JQO74
 ###POTENTIOMETER CIRCUIT###
 https://projects.raspberrypi.org/en/projects/physical-computing/13
 
-![image](https://user-images.githubusercontent.com/98055163/230794572-424bd716-af15-47fd-bc0f-0bb61ab137f0.png)
+
+
+
+_________________________________________________________________________________________________________________________________________________________
+
+
+
+
+Brief description:
+
+This project is used to accept 4 microphone inputs and turn on and off lights connected to an ETC Element 2 lightboard based on the decibel level  of the mics compared to a decibel threshold either set by a potentiometer manually, or through machine learning. The program uses the USB-C port to send out keyboard inputs to control the ETC Element 2. To activate machine learning, turn potentiometer all the way to the left.
+
+Packages used:
+  
+  numpy: 
+  
+      pip install numpy
+  
+  pyaudio: 
+  
+      sudo apt-get install portaudio19-dev && pip install pyaudio
+  
+  spidev: 
+  
+      sudo apt-get install spidev
+
+***BEFORE RUNNING***
+
+Enable SPI by going to Raspberry Pi configuration, then interfaces, and enabling the SPI switch seen in this image:
+
+![image](https://user-images.githubusercontent.com/98055163/231603554-bace0d26-9717-41e5-b7ee-f2aa633e769a.png)
+
+
+TO RUN:
+
+***ONE TIME SETUP***
+
+    cp script.sh ~/script.sh
+    cd key-mime-pi
+    sudo ./enable_usb_hid
+    sudo reboot
+
+***RUN EVERY TIME***
+
+Within ~/Documents/CS495_SoundControlledLighting/:
+
+    ~./script.sh
+    python3 2MicsSprint2.py
+
+Congrats! The program is now running!
