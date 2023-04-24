@@ -1,3 +1,5 @@
+import sys
+sys.path.append('/home/pi/.local/lib/python3.9/site-packages')
 import pyaudio # used for microphone to python integration
 import math # used to calculate decibel level
 import struct # used to calculate decibel level
@@ -45,42 +47,46 @@ def get_decibel(p, stream, chunk):
 
 # Grab device info from PyAudio
 p = pyaudio.PyAudio()
-info = p.get_host_api_info_by_index(0)
-num_devices = info.get('deviceCount')
+num_devices = p.get_device_count()
 
+output = subprocess.check_output(['arecord','-l'])
+print(f"arecord output: {output}")
+
+ids = []
 # Determine PyAudio device indexes through ALSA's .asoundrc configuration
 for i in range(num_devices):
-    device_info = p.get_device_info_by_host_api_device_index(0, i)
-    if device_info.get('maxInputChannels') > 0:
-        print("Input Device id ", i, " - ", device_info.get('name'))
-        print("Max input channels: ", device_info.get('maxInputChannels'))
-        if device_info.get('name') == "mic1":
-            print(f"\nMIC 1 Device index = {i}\n")
-            mic1Index = i
-        if device_info.get('name') == "mic2":
-            print("\nMIC 2 Device index = {i}\n")
-            mic2Index = i
-        if device_info.get('name') == "mic3":
-            print("\nMIC 3 Device index = {i}\n")
-            mic3Index = i
-        if device_info.get('name') == "mic4":
-            print("\nMIC 4 Device index = {i}\n")
-            mic4Index = i
+    device_info = p.get_device_info_by_index(i)
+    device_name = device_info["name"]
+    if "USB" in device_name:
+        ids.append(device_info["index"])
+
+print(f"len ids: {len(ids)}")
+
+mic1Index = ids[0]
+mic2Index = ids[1]
+mic3Index = ids[2]
+mic4Index = ids[3]
 
 # Opens each microphone input stream
 p1, stream1 = open_stream(chunk=1024, sample_rate=44100, num_channels=1, device_index=mic1Index)
 p2, stream2 = open_stream(chunk=1024, sample_rate=44100, num_channels=1, device_index=mic2Index)
 
 ### COMMENT OUT THESE LINES WHEN USING ONLY 2 MICS FOR TESTING ###
-#p3, stream3 = open_stream(chunk=1024, sample_rate=44100, num_channels=1, device_index=mic3Index)
-#p4, stream4 = open_stream(chunk=1024, sample_rate=44100, num_channels=1, device_index=mic4Index)
+p3, stream3 = open_stream(chunk=1024, sample_rate=44100, num_channels=1, device_index=mic3Index)
+p4, stream4 = open_stream(chunk=1024, sample_rate=44100, num_channels=1, device_index=mic4Index)
 
 # Declare and initialize needed variables
 global manDecThresh
 global decibel1
+global decibel2
+global decibel3
+global decibel4
 global ml
 global decVals
 decibel1 = 1
+decibel2 = 1
+decibel3 = 1
+decibel4 = 1
 manDecThresh = 1
 
 ### CURRENTLY ONLY USES decibel1 AND 1 LIGHT ###
@@ -94,6 +100,10 @@ class LEDThread(threading.Thread):
     
     def run(self):
         global manDecThresh
+        global decibel1
+        global decibel2
+        global decibel3
+        global decibel4
 
         sentCmd3 = False
         sentCmd7 = False
@@ -105,7 +115,7 @@ class LEDThread(threading.Thread):
             if  decibel1 > manDecThresh:
                 if not sentCmd3:
                     print("\n\n\n\n\nSent on!\n\n\n\n\n")
-                    command = "./scripts/3on.sh"
+                    command = "/home/pi/Documents/CS495_SoundControlledLighting/scripts/3on.sh"
                     os.system("lxterminal -e 'bash -c \"" + command + "; exit\"'")
                     sentCmd3 = True
                     GPIO.output(light, GPIO.HIGH)
@@ -113,14 +123,14 @@ class LEDThread(threading.Thread):
                 if sentCmd3:
                   sentCmd3 = False
                   print("\n\n\n\n\nSent off!\n\n\n\n\n")
-                  command = "./scripts/3off.sh"
+                  command = "/home/pi/Documents/CS495_SoundControlledLighting/scripts/3off.sh"
                   os.system("lxterminal -e 'bash -c \"" + command + "; exit\"'")
                   GPIO.output(light, GPIO.LOW)
                   
             if  decibel2 > manDecThresh:
                 if not sentCmd7:
                     print("\n\n\n\n\nSent on!\n\n\n\n\n")
-                    command = "./scripts/7on.sh"
+                    command = "/home/pi/Documents/CS495_SoundControlledLighting/scripts/7on.sh"
                     os.system("lxterminal -e 'bash -c \"" + command + "; exit\"'")
                     sentCmd7 = True
                     GPIO.output(light, GPIO.HIGH)
@@ -128,14 +138,14 @@ class LEDThread(threading.Thread):
                 if sentCmd7:
                   sentCmd7 = False
                   print("\n\n\n\n\nSent off!\n\n\n\n\n")
-                  command = "./scripts/7off.sh"
+                  command = "/home/pi/Documents/CS495_SoundControlledLighting/scripts/7off.sh"
                   os.system("lxterminal -e 'bash -c \"" + command + "; exit\"'")
                   GPIO.output(light, GPIO.LOW)
                   
             if  decibel3 > manDecThresh:
                 if not sentCmd39:
                     print("\n\n\n\n\nSent on!\n\n\n\n\n")
-                    command = "./scripts/39on.sh"
+                    command = "/home/pi/Documents/CS495_SoundControlledLighting/scripts/39on.sh"
                     os.system("lxterminal -e 'bash -c \"" + command + "; exit\"'")
                     sentCmd39 = True
                     GPIO.output(light, GPIO.HIGH)
@@ -143,14 +153,14 @@ class LEDThread(threading.Thread):
                 if sentCmd39:
                   sentCmd39 = False
                   print("\n\n\n\n\nSent off!\n\n\n\n\n")
-                  command = "./scripts/39off.sh"
+                  command = "/home/pi/Documents/CS495_SoundControlledLighting/scripts/39off.sh"
                   os.system("lxterminal -e 'bash -c \"" + command + "; exit\"'")
                   GPIO.output(light, GPIO.LOW)
                   
             if  decibel4 > manDecThresh:
                 if not sentCmd40:
                     print("\n\n\n\n\nSent on!\n\n\n\n\n")
-                    command = "./scripts/40on.sh"
+                    command = "/home/pi/Documents/CS495_SoundControlledLighting/scripts/40on.sh"
                     os.system("lxterminal -e 'bash -c \"" + command + "; exit\"'")
                     sentCmd40 = True
                     GPIO.output(light, GPIO.HIGH)
@@ -158,7 +168,7 @@ class LEDThread(threading.Thread):
                 if sentCmd40:
                   sentCmd40 = False
                   print("\n\n\n\n\nSent off!\n\n\n\n\n")
-                  command = "./scripts/40off.sh"
+                  command = "/home/pi/Documents/CS495_SoundControlledLighting/scripts/40off.sh"
                   os.system("lxterminal -e 'bash -c \"" + command + "; exit\"'")
                   GPIO.output(light, GPIO.LOW)
  
@@ -185,6 +195,9 @@ class Potenti(threading.Thread):
                 ml = False
                 manDecThresh = potentiometer.value * 100.0
             else:
+                if len(decVals) < 3500: 
+                    manDecThresh = 1
+
                 if not ml:
                     decVals = []
                 ml = True
@@ -202,7 +215,7 @@ potentiometer = MCP3008(0)
 
 # set light to on and output
 GPIO.setup(light, GPIO.OUT)
-GPIO.output(light, GPIO.HIGH)
+GPIO.output(light, GPIO.LOW)
 
 # start 1 of each thread
 potenti = Potenti()
@@ -219,24 +232,29 @@ while True:
     decibel2 = get_decibel(p2, stream2, chunk=1024)
     
     ### USE THESE LINES WHEN USING 2 MICS FOR TESTING ###
-    decibel3 = 45
-    decibel4 = 40
+    #decibel3 = 45
+    #decibel4 = 40
     
     ### USE THESE LINES WHEN USING 4 MICS FOR FINAL PRODUCT ###
-    #decibel3 = get_decibel(p3, stream3, chunk=1024)
-    #decibel4 = get_decibel(p4, stream4, chunk=1024)
+    decibel3 = get_decibel(p3, stream3, chunk=1024)
+    decibel4 = get_decibel(p4, stream4, chunk=1024)
 
     # ML code initialization
-    if len(decVals) < 7000 and ml:
+    if len(decVals) < 3500 and ml:
         decVals.append(decibel1)
         decVals.append(decibel2)
         decVals.append(decibel3)
         decVals.append(decibel4)
+        GPIO.output(light,GPIO.LOW)
+
     elif ml:
         decVals = np.array(decVals)
         manDecThresh = np.median(decVals)
         print(f"\n\nmanDecThresh: {manDecThresh}\n\n")
-    
+        GPIO.output(light,GPIO.HIGH) 
+    #if manual
+    if not ml:
+        GPIO.output(light,GPIO.HIGH) 
     # print variables to debug
     print(f"Microphone 1: {decibel1}, Microphone 2: {decibel2}, Microphone 3: {decibel3}, Microphone 4: {decibel4}, Decibel Threshold: {manDecThresh}")
 
@@ -245,6 +263,5 @@ close_stream(p1, stream1)
 close_stream(p2, stream2)
 
 ### COMMENT OUT THESE LINES WHEN USING ONLY 2 MICS FOR TESTING ###
-#close_stream(p3, stream3)
-#close_stream(p4, stream4)
-
+close_stream(p3, stream3)
+close_stream(p4, stream4)
