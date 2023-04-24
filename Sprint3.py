@@ -105,70 +105,70 @@ class LEDThread(threading.Thread):
         global decibel3
         global decibel4
 
+        sentCmd1 = False
+        sentCmd2 = False
         sentCmd3 = False
-        sentCmd7 = False
-        sentCmd39 = False
-        sentCmd40 = False
+        sentCmd4 = False
         
         while True:
             # light LED's
             if  decibel1 > manDecThresh:
-                if not sentCmd3:
+                if not sentCmd1:
                     print("\n\n\n\n\nSent on!\n\n\n\n\n")
-                    command = "/home/pi/Documents/CS495_SoundControlledLighting/scripts/3on.sh"
+                    command = "/home/pi/Documents/CS495_SoundControlledLighting/scripts/31on.sh"
                     os.system("lxterminal -e 'bash -c \"" + command + "; exit\"'")
-                    sentCmd3 = True
+                    sentCmd1 = True
                     GPIO.output(light, GPIO.HIGH)
             elif decibel1 <= manDecThresh:
-                if sentCmd3:
-                  sentCmd3 = False
+                if sentCmd1:
+                  sentCmd1 = False
                   print("\n\n\n\n\nSent off!\n\n\n\n\n")
-                  command = "/home/pi/Documents/CS495_SoundControlledLighting/scripts/3off.sh"
+                  command = "/home/pi/Documents/CS495_SoundControlledLighting/scripts/31off.sh"
                   os.system("lxterminal -e 'bash -c \"" + command + "; exit\"'")
                   GPIO.output(light, GPIO.LOW)
                   
             if  decibel2 > manDecThresh:
-                if not sentCmd7:
+                if not sentCmd2:
                     print("\n\n\n\n\nSent on!\n\n\n\n\n")
-                    command = "/home/pi/Documents/CS495_SoundControlledLighting/scripts/7on.sh"
+                    command = "/home/pi/Documents/CS495_SoundControlledLighting/scripts/34on.sh"
                     os.system("lxterminal -e 'bash -c \"" + command + "; exit\"'")
-                    sentCmd7 = True
+                    sentCmd2 = True
                     GPIO.output(light, GPIO.HIGH)
             elif decibel2 <= manDecThresh:
-                if sentCmd7:
-                  sentCmd7 = False
+                if sentCmd2:
+                  sentCmd2 = False
                   print("\n\n\n\n\nSent off!\n\n\n\n\n")
-                  command = "/home/pi/Documents/CS495_SoundControlledLighting/scripts/7off.sh"
+                  command = "/home/pi/Documents/CS495_SoundControlledLighting/scripts/34off.sh"
                   os.system("lxterminal -e 'bash -c \"" + command + "; exit\"'")
                   GPIO.output(light, GPIO.LOW)
                   
             if  decibel3 > manDecThresh:
-                if not sentCmd39:
+                if not sentCmd3:
                     print("\n\n\n\n\nSent on!\n\n\n\n\n")
-                    command = "/home/pi/Documents/CS495_SoundControlledLighting/scripts/39on.sh"
+                    command = "/home/pi/Documents/CS495_SoundControlledLighting/scripts/36on.sh"
                     os.system("lxterminal -e 'bash -c \"" + command + "; exit\"'")
-                    sentCmd39 = True
+                    sentCmd3 = True
                     GPIO.output(light, GPIO.HIGH)
             elif decibel3 <= manDecThresh:
-                if sentCmd39:
-                  sentCmd39 = False
+                if sentCmd3:
+                  sentCmd3 = False
                   print("\n\n\n\n\nSent off!\n\n\n\n\n")
-                  command = "/home/pi/Documents/CS495_SoundControlledLighting/scripts/39off.sh"
+                  command = "/home/pi/Documents/CS495_SoundControlledLighting/scripts/36off.sh"
                   os.system("lxterminal -e 'bash -c \"" + command + "; exit\"'")
                   GPIO.output(light, GPIO.LOW)
                   
             if  decibel4 > manDecThresh:
-                if not sentCmd40:
+                if not sentCmd4:
                     print("\n\n\n\n\nSent on!\n\n\n\n\n")
-                    command = "/home/pi/Documents/CS495_SoundControlledLighting/scripts/40on.sh"
+                    command = "/home/pi/Documents/CS495_SoundControlledLighting/scripts/38on.sh"
                     os.system("lxterminal -e 'bash -c \"" + command + "; exit\"'")
-                    sentCmd40 = True
+                    sentCmd4 = True
                     GPIO.output(light, GPIO.HIGH)
             elif decibel4 <= manDecThresh:
-                if sentCmd40:
-                  sentCmd40 = False
+                if sentCmd4:
+                  sentCmd4 = False
                   print("\n\n\n\n\nSent off!\n\n\n\n\n")
-                  command = "/home/pi/Documents/CS495_SoundControlledLighting/scripts/40off.sh"
+                  command = "/home/pi/Documents/CS495_SoundControlledLighting/scripts/38off.sh"
                   os.system("lxterminal -e 'bash -c \"" + command + "; exit\"'")
                   GPIO.output(light, GPIO.LOW)
  
