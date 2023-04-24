@@ -145,7 +145,7 @@ class LEDThread(threading.Thread):
             if  decibel3 > manDecThresh:
                 if not sentCmd3:
                     print("\n\n\n\n\nSent on!\n\n\n\n\n")
-                    command = "/home/pi/Documents/CS495_SoundControlledLighting/scripts/36on.sh"
+                    command = "/home/pi/Documents/CS495_SoundControlledLighting/scripts/37on.sh"
                     os.system("lxterminal -e 'bash -c \"" + command + "; exit\"'")
                     sentCmd3 = True
                     GPIO.output(light, GPIO.HIGH)
@@ -153,7 +153,7 @@ class LEDThread(threading.Thread):
                 if sentCmd3:
                   sentCmd3 = False
                   print("\n\n\n\n\nSent off!\n\n\n\n\n")
-                  command = "/home/pi/Documents/CS495_SoundControlledLighting/scripts/36off.sh"
+                  command = "/home/pi/Documents/CS495_SoundControlledLighting/scripts/37off.sh"
                   os.system("lxterminal -e 'bash -c \"" + command + "; exit\"'")
                   GPIO.output(light, GPIO.LOW)
                   
