@@ -280,7 +280,7 @@ while True:
     if not ml:
         GPIO.output(light,GPIO.HIGH) 
     # print variables to debug
-    print(f"Microphone 1: {decibel1}, Microphone 2: {decibel2}, Microphone 3: {decibel3}, Microphone 4: {decibel4}, Decibel Threshold: {manDecThresh}")
+    print(f"Mic1 decibel: {decibel1} Mic1 thresh: {thresh1}\nMic2 decibel: {decibel2} Mic2 thresh: {thresh2}\nMic3 decibel: {decibel3} Mic3 thresh: {thresh3}\nMic4 decibel: {decibel4} Mic4 thresh: {thresh4}\n")
 
 # close microphone input streams
 close_stream(p1, stream1)
