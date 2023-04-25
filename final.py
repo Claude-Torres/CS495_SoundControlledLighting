@@ -90,10 +90,10 @@ decibel1 = 1
 decibel2 = 1
 decibel3 = 1
 decibel4 = 1
-thresh1 = 1
-thresh2 = 1
-thresh3 = 1
-thresh4 = 1
+thresh1 = 2
+thresh2 = 2
+thresh3 = 2
+thresh4 = 2
 
 
 ### CURRENTLY ONLY USES decibel1 AND 1 LIGHT ###
@@ -198,7 +198,7 @@ class Potenti(threading.Thread):
         ml = False
         while True:
             # light LED's
-            #print(f"potval: {potentiometer.value}")
+            print(f"potval: {potentiometer.value}")
             if potentiometer.value * 100.0 > 10:
                 ml = False
                 thresh1 = thresh2 = thresh3 = thresh4 = potentiometer.value * 100.0
