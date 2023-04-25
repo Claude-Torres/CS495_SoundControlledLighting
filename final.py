@@ -194,6 +194,10 @@ class Potenti(threading.Thread):
         global decVals2
         global decVals3
         global decVals4
+        global thresh1
+        global thresh2
+        global thresh3
+        global thresh4
         global limit
         ml = False
         while True:
