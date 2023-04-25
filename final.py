@@ -82,12 +82,19 @@ global decibel2
 global decibel3
 global decibel4
 global ml
-global decVals
+global decVals1
+global decVals2
+global decVals3
+global decVals4
 decibel1 = 1
 decibel2 = 1
 decibel3 = 1
 decibel4 = 1
-manDecThresh = 1
+thresh1 = 1
+thresh2 = 1
+thresh3 = 1
+thresh4 = 1
+
 
 ### CURRENTLY ONLY USES decibel1 AND 1 LIGHT ###
 # Thread to turn on and off each section of lights
@@ -99,11 +106,16 @@ class LEDThread(threading.Thread):
         self.state = threading.Condition()
     
     def run(self):
-        global manDecThresh
+        global thresh1
+        global thresh2
+        global thresh3
+        global thresh4
         global decibel1
         global decibel2
         global decibel3
         global decibel4
+        global limit
+        limit = 875
 
         sentCmd1 = False
         sentCmd2 = False
@@ -112,65 +124,57 @@ class LEDThread(threading.Thread):
         
         while True:
             # light LED's
-            if  decibel1 > manDecThresh:
+            if  decibel1 > thresh1:
                 if not sentCmd1:
-                    print("\n\n\n\n\nSent on!\n\n\n\n\n")
+                    print("\n\n\n\n\nSent on signal for mic 1!\n\n\n\n\n")
                     command = "/home/pi/Documents/CS495_SoundControlledLighting/scripts/31on.sh"
                     os.system("lxterminal -e 'bash -c \"" + command + "; exit\"'")
                     sentCmd1 = True
-                    GPIO.output(light, GPIO.HIGH)
-            elif decibel1 <= manDecThresh:
+            elif decibel1 <= thresh1:
                 if sentCmd1:
                   sentCmd1 = False
-                  print("\n\n\n\n\nSent off!\n\n\n\n\n")
+                  print("\n\n\n\n\nSent off signal for mic 1!\n\n\n\n\n")
                   command = "/home/pi/Documents/CS495_SoundControlledLighting/scripts/31off.sh"
                   os.system("lxterminal -e 'bash -c \"" + command + "; exit\"'")
-                  GPIO.output(light, GPIO.LOW)
                   
-            if  decibel2 > manDecThresh:
+            if  decibel2 > thresh2:
                 if not sentCmd2:
-                    print("\n\n\n\n\nSent on!\n\n\n\n\n")
+                    print("\n\n\n\n\nSent on signal for mic 2!\n\n\n\n\n")
                     command = "/home/pi/Documents/CS495_SoundControlledLighting/scripts/34on.sh"
                     os.system("lxterminal -e 'bash -c \"" + command + "; exit\"'")
-                    sentCmd2 = True
-                    GPIO.output(light, GPIO.HIGH)
-            elif decibel2 <= manDecThresh:
+                    sentCmd2 = True       
+            elif decibel2 <= thresh2:
                 if sentCmd2:
                   sentCmd2 = False
-                  print("\n\n\n\n\nSent off!\n\n\n\n\n")
+                  print("\n\n\n\n\nSent off signal for mic 2!\n\n\n\n\n")
                   command = "/home/pi/Documents/CS495_SoundControlledLighting/scripts/34off.sh"
                   os.system("lxterminal -e 'bash -c \"" + command + "; exit\"'")
-                  GPIO.output(light, GPIO.LOW)
-                  
-            if  decibel3 > manDecThresh:
+                    
+            if  decibel3 > thresh3:
                 if not sentCmd3:
-                    print("\n\n\n\n\nSent on!\n\n\n\n\n")
+                    print("\n\n\n\n\nSent on signal for mic 3!\n\n\n\n\n")
                     command = "/home/pi/Documents/CS495_SoundControlledLighting/scripts/37on.sh"
                     os.system("lxterminal -e 'bash -c \"" + command + "; exit\"'")
                     sentCmd3 = True
-                    GPIO.output(light, GPIO.HIGH)
-            elif decibel3 <= manDecThresh:
+            elif decibel3 <= thresh3:
                 if sentCmd3:
                   sentCmd3 = False
-                  print("\n\n\n\n\nSent off!\n\n\n\n\n")
+                  print("\n\n\n\n\nSent off signal for mic 3!\n\n\n\n\n")
                   command = "/home/pi/Documents/CS495_SoundControlledLighting/scripts/37off.sh"
                   os.system("lxterminal -e 'bash -c \"" + command + "; exit\"'")
-                  GPIO.output(light, GPIO.LOW)
                   
-            if  decibel4 > manDecThresh:
+            if  decibel4 > thresh4:
                 if not sentCmd4:
-                    print("\n\n\n\n\nSent on!\n\n\n\n\n")
+                    print("\n\n\n\n\nSent on signal for mic 4!\n\n\n\n\n")
                     command = "/home/pi/Documents/CS495_SoundControlledLighting/scripts/38on.sh"
                     os.system("lxterminal -e 'bash -c \"" + command + "; exit\"'")
                     sentCmd4 = True
-                    GPIO.output(light, GPIO.HIGH)
-            elif decibel4 <= manDecThresh:
+            elif decibel4 <= thresh4:
                 if sentCmd4:
                   sentCmd4 = False
-                  print("\n\n\n\n\nSent off!\n\n\n\n\n")
+                  print("\n\n\n\n\nSent off signal for mic 4!\n\n\n\n\n")
                   command = "/home/pi/Documents/CS495_SoundControlledLighting/scripts/38off.sh"
                   os.system("lxterminal -e 'bash -c \"" + command + "; exit\"'")
-                  GPIO.output(light, GPIO.LOW)
  
     def stop(self):
         self.stopped = True
@@ -186,22 +190,31 @@ class Potenti(threading.Thread):
     def run(self):
         global manDecThresh
         global ml
-        global decVals
+        global decVals1
+        global decVals2
+        global decVals3
+        global decVals4
+        global limit
         ml = False
         while True:
             # light LED's
             #print(f"potval: {potentiometer.value}")
             if potentiometer.value * 100.0 > 10:
                 ml = False
-                manDecThresh = potentiometer.value * 100.0
+                thresh1 = thresh2 = thresh3 = thresh4 = potentiometer.value * 100.0
             else:
-                if len(decVals) < 3500: 
-                    manDecThresh = 1
-
+                if len(decVals1) < limit or decVals1[0] != 0: 
+                    thresh1 = 1
+                    thresh2 = 1
+                    thresh3 = 1
+                    thresh4 = 1
+                
                 if not ml:
-                    decVals = []
+                    decVals1 = []
+                    decVals2 = []
+                    decVals3 = []
+                    decVals4 = []
                 ml = True
-            #print(manDecThresh)
             
     def stop(self):
         self.stopped = True
@@ -223,8 +236,11 @@ potenti.start()
 ledthread = LEDThread()
 ledthread.start()
 
-# prepare empty list for ML
-decVals = []
+# prepare empty lists for ML
+decVals1 = []
+decVals2 = []
+decVals3 = []
+decVals4 = []
 
 # DRIVER CODE: constantly sets decibel levels and sets up machine learning if needed
 while True:
@@ -240,17 +256,25 @@ while True:
     decibel4 = get_decibel(p4, stream4, chunk=1024)
 
     # ML code initialization
-    if len(decVals) < 3500 and ml:
-        decVals.append(decibel1)
-        decVals.append(decibel2)
-        decVals.append(decibel3)
-        decVals.append(decibel4)
+    if len(decVals1) < limit and ml:
+        decVals1.append(decibel1)
+        decVals2.append(decibel2)
+        decVals3.append(decibel3)
+        decVals4.append(decibel4)
         GPIO.output(light,GPIO.LOW)
 
-    elif ml:
-        decVals = np.array(decVals)
-        manDecThresh = np.median(decVals)
-        print(f"\n\nmanDecThresh: {manDecThresh}\n\n")
+    elif ml and thresh1 == 1:
+        decVals1 = np.array(decVals1)
+        decVals2 = np.array(decVals2)
+        decVals3 = np.array(decVals3)
+        decVals4 = np.array(decVals4)
+
+        thresh1 = np.median(decVals1)
+        thresh2 = np.median(decVals2)
+        thresh3 = np.median(decVals3)
+        thresh4 = np.median(decVals4)
+        print(f"\n\nthresh1: {thresh1}\nthresh2: {thresh2}\nthresh3: {thresh3}\nthresh4: {thresh4}\n\n")
+        decVals1 = np.zeros(876)
         GPIO.output(light,GPIO.HIGH) 
     #if manual
     if not ml:
